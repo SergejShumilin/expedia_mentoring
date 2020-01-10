@@ -1,0 +1,6 @@
+rootProject.name = 'expedia_mentoring'
+
+include 'web'
+include 'dao'
+include 'service'
+
