@@ -18,8 +18,8 @@ public class TagService {
         tagDao.save(tag);
     }
 
-    public void delete(Tag tag) {
-        tagDao.delete(tag);
+    public void delete(int id) {
+        tagDao.delete(id);
     }
 
     public List<Tag> findAll() {
@@ -28,5 +28,9 @@ public class TagService {
 
     public Tag findById(int id){
         return tagDao.findById(id);
+    }
+
+    public int count(int id){
+        return tagDao.count(id);
     }
 }

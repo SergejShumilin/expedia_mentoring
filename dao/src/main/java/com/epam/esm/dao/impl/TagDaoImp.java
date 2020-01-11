@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TagDaoImp implements TagDao<Tag> {
@@ -25,8 +26,8 @@ public class TagDaoImp implements TagDao<Tag> {
     }
 
     @Override
-    public void delete(Tag tag) {
-        jdbcTemplate.update("DELETE FROM tag WHERE id = ?", tag.getId());
+    public void delete(int id) {
+        jdbcTemplate.update("DELETE FROM tag WHERE id = ?", id);
     }
 
     @Override
@@ -36,5 +37,16 @@ public class TagDaoImp implements TagDao<Tag> {
 
     public Tag findById(int id) {
         return jdbcTemplate.queryForObject("select * from tag where id = ?", new Object[]{id}, tagMapper);
+    }
+    public int count(int id){
+        int countOfTag;
+        try {
+            int count = jdbcTemplate.queryForObject(
+                    "select count(*) from tag where id = ?", Integer.class, id);
+            countOfTag = count;
+        } catch (Exception e){
+            countOfTag = 0;
+        }
+        return countOfTag;
     }
 }

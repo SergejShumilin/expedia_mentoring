@@ -16,7 +16,7 @@ public class TagController {
     }
 
     @GetMapping
-    public List<Tag> findAll(){
+    public List<Tag> findAll() {
         return tagService.findAll();
     }
 
@@ -32,10 +32,8 @@ public class TagController {
     }
 
     @DeleteMapping("/{id}")
-    public List<Tag> deleteTag(@PathVariable int id) {
-        Tag tag = tagService.findById(id);
-        tagService.delete(tag);
+    public List<Tag> delete(@PathVariable int id) {
+        tagService.delete(id);
         return tagService.findAll();
     }
-
 }

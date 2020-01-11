@@ -21,15 +21,14 @@ public class GiftCertificateDaoImpl implements GiftCertificatesDao<GiftCertifica
 
     @Override
     public void save(GiftCertificate giftCertificate) {
-        jdbcTemplate.update
-                ("INSERT INTO certificates (id, name, description, price, create_date, last_update_date, duration, tag_id) VALUES (?,?,?,?,?,?,?,?)",
-                        giftCertificate.getId(), giftCertificate.getName(), giftCertificate.getDescription(), giftCertificate.getPrice(),
+        jdbcTemplate.update("INSERT INTO certificates (name, description, price, create_date, last_update_date, duration, tag_id) VALUES (?,?,?,?,?,?,?)",
+                        giftCertificate.getName(), giftCertificate.getDescription(), giftCertificate.getPrice(),
                         giftCertificate.getCreateDate(), giftCertificate.getLastUpdateDate(), giftCertificate.getDuration(), giftCertificate.getTag().getId());
     }
 
     @Override
-    public void delete(GiftCertificate giftCertificate) {
-        jdbcTemplate.update("DELETE FROM certificates WHERE id = ?", giftCertificate.getId());
+    public void delete(int id) {
+        jdbcTemplate.update("DELETE FROM certificates WHERE id = ?", id);
     }
 
     @Override
@@ -43,8 +42,8 @@ public class GiftCertificateDaoImpl implements GiftCertificatesDao<GiftCertifica
 
     @Override
     public void update(GiftCertificate giftCertificate) {
-        jdbcTemplate.update("UPDATE certificates SET name = ?, description=?, price=?, create_date=?, last_update_date=?, duration=? WHERE id = ?",
+        jdbcTemplate.update("UPDATE certificates SET name = ?, description=?, price=?, create_date=?, last_update_date=?, duration=?, tag_id =? WHERE id = ?",
                 giftCertificate.getName(), giftCertificate.getDescription(), giftCertificate.getPrice(),
-                giftCertificate.getCreateDate(), giftCertificate.getLastUpdateDate(), giftCertificate.getDuration(), giftCertificate.getId());
+                giftCertificate.getCreateDate(), giftCertificate.getLastUpdateDate(), giftCertificate.getDuration(),giftCertificate.getTag().getId(), giftCertificate.getId());
     }
 }

@@ -27,7 +27,6 @@ public class GiftCertificateMapper implements RowMapper<GiftCertificate> {
         giftCertificate.setCreateDate(rs.getString("create_date"));
         giftCertificate.setLastUpdateDate(rs.getString("last_update_date"));
         giftCertificate.setDuration(rs.getInt("duration"));
-
         Tag tag_id = tagDaoImp.findById(rs.getInt("tag_id"));
         giftCertificate.setTag(tag_id);
         return giftCertificate;

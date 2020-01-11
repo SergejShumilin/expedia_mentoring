@@ -2,28 +2,47 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.GiftCertificatesDao;
 import com.epam.esm.dao.entity.GiftCertificate;
+import com.epam.esm.dao.entity.Tag;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 public class GiftCertificateService {
 
     private final GiftCertificatesDao<GiftCertificate> giftCertificatesDao;
+    private final TagService tagService;
 
-    public GiftCertificateService(GiftCertificatesDao<GiftCertificate> giftCertificatesDao) {
+    public GiftCertificateService(GiftCertificatesDao<GiftCertificate> giftCertificatesDao, TagService tagService) {
         this.giftCertificatesDao = giftCertificatesDao;
+        this.tagService = tagService;
+    }
+
+    private String getDate(){
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"); // Quoted "Z" to indicate UTC, no timezone offset
+        return df.format(new Date());
+    }
+
+    private boolean isExistTag(Tag tag){
+        int count = tagService.count(tag.getId());
+        return count != 0;
     }
 
     public void save(GiftCertificate giftCertificate) {
+        Tag tag = giftCertificate.getTag();
+        if (!isExistTag(tag)){
+            tagService.save(tag);
+        }
+        giftCertificate.setCreateDate(getDate());
+        giftCertificate.setLastUpdateDate(getDate());
         giftCertificatesDao.save(giftCertificate);
     }
 
-    public void delete(GiftCertificate giftCertificate) {
-        giftCertificatesDao.delete(giftCertificate);
+    public void delete(int id) {
+        giftCertificatesDao.delete(id);
     }
 
     public List<GiftCertificate> getAll() {
@@ -35,7 +54,31 @@ public class GiftCertificateService {
     }
 
     public void update(GiftCertificate giftCertificate) {
-        giftCertificatesDao.update(giftCertificate);
+        GiftCertificate certificateFromDb = findById(giftCertificate.getId());
+        boolean equalsCertificates = certificateFromDb.equals(giftCertificate);
+        if (!equalsCertificates) {
+            checkForEquals(certificateFromDb, giftCertificate);
+            giftCertificatesDao.update(certificateFromDb);
+        }
+    }
+
+    private void checkForEquals(GiftCertificate certificateFromDb, GiftCertificate certificate){
+       if (!certificate.getName().equals(certificateFromDb.getName())){
+           certificateFromDb.setName(certificate.getName());
+       }
+       if(certificate.getPrice()!=certificateFromDb.getPrice()){
+           certificateFromDb.setPrice(certificate.getPrice());
+       }
+       if (!certificate.getDescription().equals(certificateFromDb.getDescription())){
+           certificateFromDb.setDescription(certificate.getDescription());
+       }
+       if (!certificate.getTag().equals(certificateFromDb.getTag())){
+           certificateFromDb.setTag(certificate.getTag());
+       }
+       if (certificate.getDuration()!=certificateFromDb.getDuration()){
+           certificateFromDb.setDuration(certificate.getDuration());
+       }
+       certificateFromDb.setLastUpdateDate(getDate());
     }
 
     public List<GiftCertificate> sortByName(String typeSort) {

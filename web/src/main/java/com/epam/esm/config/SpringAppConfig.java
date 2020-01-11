@@ -22,4 +22,5 @@ public class SpringAppConfig {
         dataSource.setPassword("12345");
         return dataSource;
     }
+
 }

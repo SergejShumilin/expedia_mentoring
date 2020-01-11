@@ -22,7 +22,7 @@ public class CertificateController {
     }
 
     @GetMapping
-    public List<GiftCertificate> getAllCertificates() {
+    public List<GiftCertificate> findAll() {
         return giftCertificateService.getAll();
     }
 
@@ -33,14 +33,19 @@ public class CertificateController {
 
     @DeleteMapping(value = "/{id}")
     public List<GiftCertificate> delete(@PathVariable int id) {
-        GiftCertificate giftCertificate = giftCertificateService.findById(id);
-        giftCertificateService.delete(giftCertificate);
+        giftCertificateService.delete(id);
         return giftCertificateService.getAll();
     }
 
     @GetMapping(value = "/sort/{type}")
     public List<GiftCertificate> sort(@PathVariable String type) {
         return giftCertificateService.sortByName(type);
+    }
+
+    @PutMapping
+    public List<GiftCertificate> update(@RequestBody GiftCertificate giftCertificate){
+        giftCertificateService.update(giftCertificate);
+        return giftCertificateService.getAll();
     }
 
 }
