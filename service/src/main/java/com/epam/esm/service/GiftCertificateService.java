@@ -3,6 +3,7 @@ package com.epam.esm.service;
 import com.epam.esm.dao.GiftCertificatesDao;
 import com.epam.esm.dao.entity.GiftCertificate;
 import com.epam.esm.dao.entity.Tag;
+import com.epam.esm.exception.CertificateNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.text.DateFormat;
@@ -26,14 +27,9 @@ public class GiftCertificateService {
         return df.format(new Date());
     }
 
-    private boolean isExistTag(Tag tag){
-        int count = tagService.count(tag.getId());
-        return count != 0;
-    }
-
     public void save(GiftCertificate giftCertificate) {
         Tag tag = giftCertificate.getTag();
-        if (!isExistTag(tag)){
+        if (!tagService.isExist(tag.getId())){
             tagService.save(tag);
         }
         giftCertificate.setCreateDate(getDate());
@@ -49,20 +45,22 @@ public class GiftCertificateService {
         return giftCertificatesDao.findAll();
     }
 
-    public GiftCertificate findById(int id){
+    public GiftCertificate findById(int id) throws CertificateNotFoundException {
+        boolean exist = giftCertificatesDao.isExist(id);
+        if (!exist){ throw new CertificateNotFoundException(id);}
         return giftCertificatesDao.findById(id);
     }
 
-    public void update(GiftCertificate giftCertificate) {
+    public void update(GiftCertificate giftCertificate) throws CertificateNotFoundException {
         GiftCertificate certificateFromDb = findById(giftCertificate.getId());
         boolean equalsCertificates = certificateFromDb.equals(giftCertificate);
         if (!equalsCertificates) {
-            checkForEquals(certificateFromDb, giftCertificate);
+            changeCertificate(certificateFromDb, giftCertificate);
             giftCertificatesDao.update(certificateFromDb);
         }
     }
 
-    private void checkForEquals(GiftCertificate certificateFromDb, GiftCertificate certificate){
+    private void changeCertificate(GiftCertificate certificateFromDb, GiftCertificate certificate){
        if (!certificate.getName().equals(certificateFromDb.getName())){
            certificateFromDb.setName(certificate.getName());
        }

@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.exception.CertificateNotFoundException;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.dao.entity.GiftCertificate;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class CertificateController {
     }
 
     @GetMapping(value = "/{id}")
-    public GiftCertificate findById(@PathVariable int id) {
+    public GiftCertificate findById(@PathVariable int id) throws CertificateNotFoundException {
         return giftCertificateService.findById(id);
     }
 
@@ -43,7 +44,7 @@ public class CertificateController {
     }
 
     @PutMapping
-    public List<GiftCertificate> update(@RequestBody GiftCertificate giftCertificate){
+    public List<GiftCertificate> update(@RequestBody GiftCertificate giftCertificate) throws CertificateNotFoundException {
         giftCertificateService.update(giftCertificate);
         return giftCertificateService.getAll();
     }

@@ -36,6 +36,7 @@ public class GiftCertificateDaoImpl implements GiftCertificatesDao<GiftCertifica
         return jdbcTemplate.query("SELECT * from certificates", giftCertificateMapper);
     }
 
+    @Override
     public GiftCertificate findById(int id) {
         return jdbcTemplate.queryForObject("select * from certificates where id = ?", new Object[]{id}, giftCertificateMapper);
     }
@@ -45,5 +46,10 @@ public class GiftCertificateDaoImpl implements GiftCertificatesDao<GiftCertifica
         jdbcTemplate.update("UPDATE certificates SET name = ?, description=?, price=?, create_date=?, last_update_date=?, duration=?, tag_id =? WHERE id = ?",
                 giftCertificate.getName(), giftCertificate.getDescription(), giftCertificate.getPrice(),
                 giftCertificate.getCreateDate(), giftCertificate.getLastUpdateDate(), giftCertificate.getDuration(),giftCertificate.getTag().getId(), giftCertificate.getId());
+    }
+
+    @Override
+    public boolean isExist(int id){
+        return jdbcTemplate.queryForObject("SELECT EXISTS(SELECT id FROM certificates WHERE id = ?)", Boolean.class, id);
     }
 }

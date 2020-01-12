@@ -35,18 +35,13 @@ public class TagDaoImp implements TagDao<Tag> {
         return jdbcTemplate.query("select * from tag", tagMapper);
     }
 
+    @Override
     public Tag findById(int id) {
         return jdbcTemplate.queryForObject("select * from tag where id = ?", new Object[]{id}, tagMapper);
     }
-    public int count(int id){
-        int countOfTag;
-        try {
-            int count = jdbcTemplate.queryForObject(
-                    "select count(*) from tag where id = ?", Integer.class, id);
-            countOfTag = count;
-        } catch (Exception e){
-            countOfTag = 0;
-        }
-        return countOfTag;
+
+    @Override
+    public boolean isExist(int id){
+        return jdbcTemplate.queryForObject("SELECT EXISTS(SELECT id FROM tag WHERE id = ?)", Boolean.class, id);
     }
 }

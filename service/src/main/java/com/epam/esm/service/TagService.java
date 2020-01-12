@@ -30,7 +30,7 @@ public class TagService {
         return tagDao.findById(id);
     }
 
-    public int count(int id){
-        return tagDao.count(id);
+    public boolean isExist(int id){
+        return tagDao.isExist(id);
     }
 }
