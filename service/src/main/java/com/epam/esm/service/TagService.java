@@ -19,6 +19,7 @@ public class TagService {
     }
 
     public void delete(int id) {
+
         tagDao.delete(id);
     }
 
@@ -30,7 +31,16 @@ public class TagService {
         return tagDao.findById(id);
     }
 
+    public Tag findByName(String name){
+        return tagDao.findByName(name);
+    }
+
     public boolean isExist(int id){
         return tagDao.isExist(id);
     }
+
+    public boolean isExistByName(String name){
+        return tagDao.isExistByName(name);
+    }
+
 }

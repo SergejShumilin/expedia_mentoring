@@ -7,5 +7,7 @@ public interface Dao<T> {
     void delete(int id);
     List<T> findAll();
     T findById(int id);
+
     boolean isExist(int id);
+    boolean isExistByName(String name);
 }
